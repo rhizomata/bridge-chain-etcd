@@ -1,0 +1,1 @@
+go run . -cluster cluster1 -name bridge1 -exposed-host 127.0.0.1 -port 8080 -etcd-urls http://127.0.0.1:2379
