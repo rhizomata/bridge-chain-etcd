@@ -9,18 +9,19 @@ import (
 
 // Manager ..
 type Manager struct {
-	cluster             string
-	localid             string
-	kv                  kv.KV
-	workerFactoryMethod func(helper *Helper) (Worker, error)
-	workers             map[string]Worker
+	cluster string
+	localid string
+	kv      kv.KV
+	// workerFactoryMethod func(helper *Helper) (Worker, error)
+	workerFactory Factory
+	workers       map[string]Worker
 }
 
 // NewManager create Manager
 func NewManager(cluster string, localid string, kv kv.KV,
-	workerFactoryMethod func(helper *Helper) (Worker, error)) *Manager {
+	workerFactory Factory) *Manager {
 	manager := Manager{cluster: cluster, localid: localid, kv: kv,
-		workerFactoryMethod: workerFactoryMethod}
+		workerFactory: workerFactory}
 	manager.workers = make(map[string]Worker)
 	return &manager
 }
@@ -40,7 +41,7 @@ func (manager *Manager) registerWorker(id string, job []byte) error {
 		return errors.New("Worker[" + id + "] is already registered. If you want register new one, DeregisterWorker first")
 	}
 	helper := NewHelper(manager.cluster, id, job, manager.kv)
-	worker, err := manager.workerFactoryMethod(helper)
+	worker, err := manager.workerFactory.NewWorker(helper)
 	if err != nil {
 		log.Println("[ERROR] Cannot create worker ", err)
 		return err
@@ -97,9 +98,9 @@ func (manager *Manager) SetJobs(jobs map[string][]byte) {
 		if worker != nil {
 			delete(tempWorkers, id)
 		} else {
-			helper := NewHelper(manager.cluster, id, data, manager.kv) 
+			helper := NewHelper(manager.cluster, id, data, manager.kv)
 			// worker = manager.workerFactoryMethod(helper)
-			worker2, err := manager.workerFactoryMethod(helper)
+			worker2, err := manager.workerFactory.NewWorker(helper)
 			if err != nil {
 				log.Println("[ERROR-WorkerMan] Cannot create worker ", err)
 				continue

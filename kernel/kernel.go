@@ -32,12 +32,11 @@ type Kernel struct {
 }
 
 // New ..
-func New(config *model.Config,
-	workerFactoryMethod func(helper *worker.Helper) (wroker worker.Worker, err error)) *Kernel {
+func New(config *model.Config, workerFactory worker.Factory) *Kernel {
 	kernel := new(Kernel)
 	kernel.config = config
 
-	kernel.initialize(workerFactoryMethod)
+	kernel.initialize(workerFactory)
 	return kernel
 }
 
@@ -46,7 +45,7 @@ func (kernel *Kernel) SetJobOrganizer(jobOrganizer job.Organizer) {
 	kernel.jobOrganizer = jobOrganizer
 }
 
-func (kernel *Kernel) initialize(workerFactoryMethod func(helper *worker.Helper) (worker.Worker, error)) {
+func (kernel *Kernel) initialize(workerFactory worker.Factory) {
 	if _, err := os.Stat(kernel.config.DataDir); err != nil {
 		if os.IsNotExist(err) {
 			os.MkdirAll(kernel.config.DataDir, os.ModePerm)
@@ -96,7 +95,7 @@ func (kernel *Kernel) initialize(workerFactoryMethod func(helper *worker.Helper)
 
 	kernel.jobManager = job.NewManager(kernel.config.Cluster, kernel.id, kernel.kv)
 
-	kernel.workerManager = worker.NewManager(kernel.config.Cluster, kernel.id, kernel.kv, workerFactoryMethod)
+	kernel.workerManager = worker.NewManager(kernel.config.Cluster, kernel.id, kernel.kv, workerFactory)
 }
 
 // ID get ID

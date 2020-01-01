@@ -12,6 +12,12 @@ type Worker interface {
 	IsStarted() bool
 }
 
+// Factory ..
+type Factory interface {
+	Name() string
+	NewWorker(helper *Helper) (Worker, error)
+}
+
 // Helper ..
 type Helper struct {
 	cluster string
@@ -27,6 +33,13 @@ func NewHelper(cluster string, id string, job []byte, kv kv.KV) *Helper {
 	helper := Helper{cluster: cluster, id: id, job: job, kv: kv}
 	helper.dao = &DAO{cluster: cluster, kv: kv}
 	return &helper
+}
+
+// CreateChildHelper ...
+func (helper *Helper) CreateChildHelper(subid string, job []byte) *Helper {
+	helper2 := Helper{cluster: helper.cluster, id: helper.id + "-" + subid, job: job, kv: helper.kv}
+	helper2.dao = helper.dao
+	return &helper2
 }
 
 // ID get worker's id

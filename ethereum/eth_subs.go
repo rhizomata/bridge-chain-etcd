@@ -39,7 +39,7 @@ type EthSubsJobInfo struct {
 	From              uint64 `json:"from"`
 }
 
-// EthSubsManager ..
+// EthSubsManager implements worker.Factory
 type EthSubsManager struct {
 	networkURL string
 	handlers   map[string]LogHandler
@@ -77,7 +77,12 @@ func (manager *EthSubsManager) RegisterLogHandler(handler LogHandler) {
 	manager.handlers[handler.Name()] = handler
 }
 
-// NewWorker ..
+// Name worker.Factory.Name
+func (manager *EthSubsManager) Name() string {
+	return "ETH_SUBS"
+}
+
+// NewWorker worker.Factory.NewWorker
 func (manager *EthSubsManager) NewWorker(helper *worker.Helper) (wroker worker.Worker, err error) {
 	jobInfo := new(EthSubsJobInfo)
 	json.Unmarshal(helper.Job(), jobInfo)

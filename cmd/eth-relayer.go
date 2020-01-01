@@ -9,6 +9,7 @@ import (
 	"github.com/rhizomata/bridge-chain-etcd/kernel/cluster"
 	"github.com/rhizomata/bridge-chain-etcd/kernel/job"
 	"github.com/rhizomata/bridge-chain-etcd/kernel/model"
+	"github.com/rhizomata/bridge-chain-etcd/kernel/worker"
 	"github.com/rhizomata/bridge-chain-etcd/protocol"
 )
 
@@ -18,7 +19,14 @@ func main() {
 
 	// "wss://mainnet.infura.io/ws"
 	tokenSubsMan := ethereum.NewEthSubsManager("wss://mainnet.infura.io/ws")
-	kernel := kernel.New(daemonConfig, tokenSubsMan.NewWorker)
+
+	factory, err := worker.NewMultiWorkerFactory("eth-relay", []worker.Factory{tokenSubsMan})
+
+	if err != nil {
+		log.Fatal("[ERROR] Cannot Create Worker Factory", err)
+	}
+
+	kernel := kernel.New(daemonConfig, factory)
 
 	kernel.SetJobOrganizer(job.NewSimpleOrganizer())
 
@@ -26,7 +34,7 @@ func main() {
 		return protocol.CheckHealth(memb.DaemonURL)
 	})
 
-	err := kernel.Start()
+	err = kernel.Start()
 	if err != nil {
 		log.Fatal("[ERROR] Daemon Start Fail", err)
 	}
