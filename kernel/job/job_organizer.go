@@ -24,6 +24,7 @@ func (organizer *simpleOrganizer) Distribute(
 	fmt.Println("======== jobOrganizer::Distribute +++++++++")
 
 	// 1) alive하지 않은 멤버의 job 회수
+	// 2) member job 중 삭제된 job 제거
 	// 2) 할당되지 않은 job 식별
 	// 3) 새로운 job들 alive멤버에게 할당
 
@@ -35,9 +36,19 @@ func (organizer *simpleOrganizer) Distribute(
 	for _, membID := range aliveMembers {
 		jobs := membJobMap[membID]
 		if jobs != nil {
+			// 기존 member job에 포함되지 않은 새로운 job 식별
+			// 기존 member job들 중 삭제된 job 식별하여 member jobs에서 제거
+			newMembJobs := []string{}
+
 			for _, job := range jobs {
 				delete(unallocatedJobs, job)
+				if _, ok := allJobs[job]; ok {
+					newMembJobs = append(newMembJobs, job)
+				} else {
+					log.Println("[INFO-JobOrg] remove member job ", job)
+				}
 			}
+			membJobMap[membID] = newMembJobs
 		}
 	}
 

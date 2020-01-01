@@ -9,4 +9,7 @@ const (
 
 	// AddJobPath /addjob
 	AddJobPath = "/addjob"
+
+	// RemoveJobPath /removejob
+	RemoveJobPath = "/removejob"
 )

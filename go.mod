@@ -9,6 +9,7 @@ require (
 	github.com/ethereum/go-ethereum v1.9.9
 	github.com/gin-gonic/gin v1.5.0
 	github.com/google/uuid v1.1.1
+	github.com/rhizomata/js v0.0.0-20191231120211-6f5be962b23e
 	go.etcd.io/etcd v3.3.18+incompatible
 	go.uber.org/zap v1.13.0 // indirect
 	google.golang.org/grpc v1.26.0 // indirect

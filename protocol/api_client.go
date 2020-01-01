@@ -34,3 +34,11 @@ func (client *Client) AddJob(data []byte) bool {
 	resp, err := http.Post(client.daemonURL+V1Path+AddJobPath, "text/json", &buffer)
 	return (err == nil && resp.StatusCode == 200)
 }
+
+// RemoveJob ..
+func (client *Client) RemoveJob(jobid string) bool {
+	buffer := bytes.Buffer{}
+	buffer.Write([]byte(jobid))
+	resp, err := http.Post(client.daemonURL+V1Path+RemoveJobPath, "text/json", &buffer)
+	return (err == nil && resp.StatusCode == 200)
+}

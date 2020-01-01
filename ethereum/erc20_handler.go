@@ -75,11 +75,11 @@ func (handler *ERC20LogHandler) HandleLog(helper *worker.Helper, elog types.Log)
 	}
 
 	if err == nil {
-		rowID := fmt.Sprintf("%d-%d", elog.BlockNumber, elog.TxIndex)
+		// rowID := fmt.Sprintf("%d-%d", elog.BlockNumber, elog.TxIndex)
 
 		fmt.Println(" - ", handler.Name(), event)
 
-		err = helper.PutData(rowID, event)
+		// err = helper.PutData(rowID, event)
 	}
 
 	return err

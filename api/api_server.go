@@ -31,6 +31,7 @@ func StartServer(kernel *kernel.Kernel, listenAddress string) (server *Server) {
 		v1.HEAD(protocol.HealthPath, server.builtinService.health)
 		v1.GET(protocol.HealthPath, server.builtinService.health)
 		v1.POST(protocol.AddJobPath, server.builtinService.addJob)
+		v1.POST(protocol.RemoveJobPath, server.builtinService.removeJob)
 	}
 
 	go func() {
