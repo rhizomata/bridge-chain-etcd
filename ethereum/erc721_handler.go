@@ -70,7 +70,7 @@ func (handler *ERC721LogHandler) HandleLog(helper *worker.Helper, elog types.Log
 		err = handler.erc721Abi.Unpack(&event, "Transfer", elog.Data)
 
 		if err != nil {
-			log.Println("[ERROR-ERC20] Unpack Transfer event data ", err)
+			log.Println("[ERROR-ERC721] Unpack Transfer event data ", err)
 		}
 
 		break
@@ -78,14 +78,14 @@ func (handler *ERC721LogHandler) HandleLog(helper *worker.Helper, elog types.Log
 		event.Type = "Approval"
 		err = handler.erc721Abi.Unpack(&event, "Approval", elog.Data)
 		if err != nil {
-			log.Println("[ERROR-ERC20] Unpack Approval event data ", err)
+			log.Println("[ERROR-ERC721] Unpack Approval event data ", err)
 		}
 		break
 	case erc721ApprovalAllSigHash:
 		event.Type = "ApprovalForAll"
 		err = handler.erc721Abi.Unpack(&event, "ApprovalForAll", elog.Data)
 		if err != nil {
-			log.Println("[ERROR-ERC20] Unpack ApprovalForAll event data ", err)
+			log.Println("[ERROR-ERC721] Unpack ApprovalForAll event data ", err)
 		}
 		break
 
@@ -93,7 +93,7 @@ func (handler *ERC721LogHandler) HandleLog(helper *worker.Helper, elog types.Log
 		event.Type = "Mint"
 		err = handler.erc721Abi.Unpack(&event, "Mint", elog.Data)
 		if err != nil {
-			log.Println("[ERROR-ERC20] Unpack Mint event data ", err)
+			log.Println("[ERROR-ERC721] Unpack Mint event data ", err)
 		}
 		break
 
