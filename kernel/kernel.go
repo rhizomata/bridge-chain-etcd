@@ -22,22 +22,29 @@ const (
 
 // Kernel ..
 type Kernel struct {
-	config         *model.Config
-	id             string
-	kv             kv.KV
-	clusterManager *cluster.Manager
-	jobManager     *job.Manager
-	jobOrganizer   job.Organizer
-	workerManager  *worker.Manager
+	config            *model.Config
+	id                string
+	kv                kv.KV
+	clusterManager    *cluster.Manager
+	jobManager        *job.Manager
+	jobOrganizer      job.Organizer
+	workerManager     *worker.Manager
+	rootWorkerFactory *worker.AbstractWorkerFactory
 }
 
 // New ..
-func New(config *model.Config, workerFactory worker.Factory) *Kernel {
+func New(config *model.Config) *Kernel {
 	kernel := new(Kernel)
 	kernel.config = config
-
+	workerFactory := worker.NewAbstractWorkerFactory("_root")
+	kernel.rootWorkerFactory = workerFactory
 	kernel.initialize(workerFactory)
 	return kernel
+}
+
+//RegisterWorkerFactory register worker.Factory
+func (kernel *Kernel) RegisterWorkerFactory(factory worker.Factory) {
+	kernel.rootWorkerFactory.AddFactory(factory)
 }
 
 // SetJobOrganizer : Set JobOrganizer

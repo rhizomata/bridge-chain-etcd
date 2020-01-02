@@ -39,7 +39,7 @@ type EthSubsJobInfo struct {
 	From              uint64 `json:"from"`
 }
 
-// EthSubsManager implements worker.Factory
+// EthSubsManager implements worker.Factory, name eth_subs
 type EthSubsManager struct {
 	networkURL string
 	handlers   map[string]LogHandler

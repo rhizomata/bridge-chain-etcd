@@ -17,7 +17,7 @@ func main() {
 	daemonConfig := model.ParseFlagConfig()
 	daemonAddr := daemonConfig.GetDaemonAddr()
 
-	rootFactory := worker.NewAbstractWorkerFactory("root-factory")
+	kernel := kernel.New(daemonConfig)
 
 	// "wss://mainnet.infura.io/ws"
 	tokenSubsMan := ethereum.NewEthSubsManager("wss://mainnet.infura.io/ws")
@@ -28,9 +28,8 @@ func main() {
 		log.Fatal("[ERROR] Cannot Create Worker Factory", err)
 	}
 
-	rootFactory.AddFactory(multiFactory)
-
-	kernel := kernel.New(daemonConfig, rootFactory)
+	kernel.RegisterWorkerFactory(tokenSubsMan)
+	kernel.RegisterWorkerFactory(multiFactory)
 
 	kernel.SetJobOrganizer(job.NewSimpleOrganizer())
 
