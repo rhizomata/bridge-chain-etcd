@@ -77,12 +77,12 @@ func (manager *EthSubsManager) RegisterLogHandler(handler LogHandler) {
 	manager.handlers[handler.Name()] = handler
 }
 
-// Name worker.Factory.Name
+// Name implements worker.Factory.Name
 func (manager *EthSubsManager) Name() string {
-	return "ETH_SUBS"
+	return "eth_subs"
 }
 
-// NewWorker worker.Factory.NewWorker
+// NewWorker implements worker.Factory.NewWorker
 func (manager *EthSubsManager) NewWorker(helper *worker.Helper) (wroker worker.Worker, err error) {
 	jobInfo := new(EthSubsJobInfo)
 	json.Unmarshal(helper.Job(), jobInfo)

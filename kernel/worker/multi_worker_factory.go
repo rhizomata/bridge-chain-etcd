@@ -2,7 +2,8 @@ package worker
 
 import "log"
 
-// MultiWorkerFactory  implements worker.Factory
+// MultiWorkerFactory implements worker.Factory.
+// This factory has many sub factories and create MultiWorker that has sub-workers
 type MultiWorkerFactory struct {
 	name            string
 	workerFactories map[string]Factory
